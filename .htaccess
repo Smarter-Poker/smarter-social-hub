@@ -1,0 +1,46 @@
+### SMARTER SOCIAL HUB ###
+# Apache Rewrite Engine Configuration
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Force HTTPS (uncomment in production)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Remove .php extension
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}\.php -f
+    RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+    # Handle API routes
+    RewriteRule ^api/(.*)$ api.php?request=$1 [L,QSA]
+
+    # Block access to sensitive files
+    RewriteRule ^\.htaccess$ - [F,L]
+    RewriteRule ^includes/ - [F,L]
+    RewriteRule ^vendor/ - [F,L]
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Disable directory listing
+Options -Indexes
+
+# Block access to sensitive files
+<FilesMatch "\.(sql|log|txt|md)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Allow access to robots.txt
+<Files "robots.txt">
+    Order Allow,Deny
+    Allow from all
+</Files>

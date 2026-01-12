@@ -1,0 +1,292 @@
+/**
+ * 🎨 SMARTER.POKER BRANDING OVERRIDE
+ * Custom CSS for Sngine Social Platform
+ * 
+ * Club Orange Theme + Anti-Gravity UI
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🎨 COLOR VARIABLES                                                          */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* Primary Colors */
+    --sp-primary: #FF6B35;
+    /* Club Orange */
+    --sp-primary-dark: #E55A2B;
+    --sp-primary-light: #FF8B5C;
+
+    /* Accent Colors */
+    --sp-accent-cyan: #00FFFF;
+    --sp-accent-magenta: #FF00FF;
+    --sp-accent-gold: #FFD700;
+
+    /* Backgrounds */
+    --sp-bg-dark: #0A0F1E;
+    --sp-bg-card: rgba(255, 255, 255, 0.03);
+    --sp-bg-glass: rgba(255, 255, 255, 0.05);
+
+    /* Text */
+    --sp-text-primary: #FFFFFF;
+    --sp-text-secondary: rgba(255, 255, 255, 0.6);
+    --sp-text-muted: rgba(255, 255, 255, 0.4);
+
+    /* Borders */
+    --sp-border: rgba(255, 255, 255, 0.08);
+    --sp-border-glow: rgba(255, 107, 53, 0.3);
+
+    /* Shadows */
+    --sp-glow-orange: 0 0 20px rgba(255, 107, 53, 0.3);
+    --sp-glow-cyan: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🌌 GLOBAL OVERRIDES                                                         */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+body {
+    background: var(--sp-bg-dark) !important;
+    background-image:
+        radial-gradient(ellipse at 10% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 80%, rgba(0, 255, 255, 0.03) 0%, transparent 50%) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🧭 NAVBAR OVERRIDE                                                          */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.navbar,
+.navbar-default,
+#navbar {
+    background: linear-gradient(180deg,
+            rgba(10, 15, 30, 0.98) 0%,
+            rgba(10, 15, 30, 0.95) 100%) !important;
+    backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid var(--sp-border) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+.navbar-brand,
+.navbar .logo,
+.navbar-brand img {
+    filter: none !important;
+}
+
+/* Nav Icons - Club Orange */
+.navbar-nav>li>a,
+.nav-icon,
+.navbar .fa,
+.navbar .fas,
+.navbar .far,
+.navbar .fab {
+    color: var(--sp-text-secondary) !important;
+    transition: all 0.3s ease !important;
+}
+
+.navbar-nav>li>a:hover,
+.nav-icon:hover,
+.navbar .fa:hover,
+.navbar .fas:hover {
+    color: var(--sp-primary) !important;
+    text-shadow: var(--sp-glow-orange) !important;
+}
+
+/* Active Nav Item */
+.navbar-nav>li.active>a,
+.nav-item.active .nav-icon {
+    color: var(--sp-primary) !important;
+    text-shadow: var(--sp-glow-orange) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 📝 POST/CARD OVERRIDE                                                       */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.post,
+.panel,
+.card,
+.box,
+.widget,
+.side-widget {
+    background: var(--sp-bg-card) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid var(--sp-border) !important;
+    border-radius: 16px !important;
+    transition: all 0.3s ease !important;
+}
+
+.post:hover,
+.panel:hover,
+.card:hover {
+    border-color: var(--sp-border-glow) !important;
+    box-shadow: var(--sp-glow-orange) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🔘 BUTTON OVERRIDE                                                          */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.btn-primary,
+.btn-main,
+.btn-primary-soft {
+    background: linear-gradient(135deg, var(--sp-primary), var(--sp-primary-dark)) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: var(--sp-glow-orange) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-primary:hover,
+.btn-main:hover {
+    background: linear-gradient(135deg, var(--sp-primary-light), var(--sp-primary)) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 0 30px rgba(255, 107, 53, 0.5) !important;
+}
+
+/* Secondary Buttons */
+.btn-secondary,
+.btn-default,
+.btn-light {
+    background: var(--sp-bg-glass) !important;
+    border: 1px solid var(--sp-border) !important;
+    color: var(--sp-text-primary) !important;
+    border-radius: 12px !important;
+}
+
+.btn-secondary:hover,
+.btn-default:hover,
+.btn-light:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--sp-primary) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 💬 CHAT OVERRIDE                                                            */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.chat-box,
+.message-box,
+.conversation {
+    background: var(--sp-bg-card) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid var(--sp-border) !important;
+    border-radius: 16px !important;
+}
+
+.message-bubble-sent,
+.message-out {
+    background: linear-gradient(135deg, var(--sp-primary), var(--sp-primary-dark)) !important;
+    border-radius: 16px 16px 4px 16px !important;
+}
+
+.message-bubble-received,
+.message-in {
+    background: var(--sp-bg-glass) !important;
+    border: 1px solid var(--sp-border) !important;
+    border-radius: 16px 16px 16px 4px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🔔 NOTIFICATION BADGE                                                       */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.badge,
+.notification-badge,
+.count-badge {
+    background: var(--sp-primary) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    box-shadow: var(--sp-glow-orange) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 💫 ANIMATIONS                                                               */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes sp-pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(255, 107, 53, 0.5);
+    }
+}
+
+.notification-active,
+.new-message-indicator {
+    animation: sp-pulse-glow 2s ease-in-out infinite !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 📱 STORIES / REELS                                                          */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.story-ring,
+.story-border {
+    border: 2px solid var(--sp-primary) !important;
+    background: linear-gradient(45deg, var(--sp-primary), var(--sp-accent-magenta)) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🎯 ICONS - CLUB ORANGE ACCENT                                               */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.icon-active,
+.liked,
+.favorited,
+.followed {
+    color: var(--sp-primary) !important;
+}
+
+/* Like button animation */
+.like-button.liked i,
+.reaction.active {
+    color: var(--sp-primary) !important;
+    animation: sp-pulse-glow 0.5s ease-out !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 📊 SCROLLBAR                                                                */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--sp-bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--sp-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--sp-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🎨 SMARTER.POKER SIGNATURE                                                  */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.smarter-poker-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, var(--sp-primary), var(--sp-primary-dark));
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
