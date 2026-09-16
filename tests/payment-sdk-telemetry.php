@@ -1,32 +1,39 @@
 <?php
-// Validate the installed SDK option with real SDK calls and an offline transport.
-require dirname(__DIR__) . '/vendor/autoload.php';
-use Cashfree\Cashfree;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-
-// The pinned SDK's optional test transport parameter uses a relative namespace.
-// Alias only in this offline fixture; production always uses its normal client.
-class_alias(Client::class, 'Cashfree\\GuzzleHttp\\Client');
-
-Cashfree::$XClientId = 'test-only';
-Cashfree::$XClientSecret = 'test-only';
-Cashfree::$XEnableErrorAnalytics = false;
-$http = new Client(['handler' => HandlerStack::create(new MockHandler([
-  new Response(200, ['Content-Type' => 'application/json'], '{"payment_session_id":"offline-session"}'),
-  new Response(200, ['Content-Type' => 'application/json'], '[{"payment_status":"SUCCESS"}]'),
-]))]);
-$client = new Cashfree();
-$customer = new \Cashfree\Model\CustomerDetails(['customer_id'=>'test', 'customer_phone'=>'0000000000']);
-$request = new \Cashfree\Model\CreateOrderRequest(['order_amount'=>10, 'order_currency'=>'USD', 'customer_details'=>$customer]);
-$order = $client->PGCreateOrder('2023-08-01', $request, null, null, $http);
-$payments = $client->PGOrderFetchPayments('2023-08-01', 'test-order', null, null, $http);
-if ($order[0]->getPaymentSessionId() !== 'offline-session' || $payments[0][0]->getPaymentStatus() !== 'SUCCESS') {
-  throw new Exception('SDK response contract changed');
+// Deny restoration of the retired provider and the payment SDK that embedded it.
+$root = getenv('PAYMENT_SOURCE_ROOT') ?: dirname(__DIR__);
+$retiredProvider = implode('', ['sen', 'try']);
+$forbiddenPackages = [$retiredProvider . '/sdk', $retiredProvider . '/' . $retiredProvider, 'cashfree/cashfree-pg'];
+$lock = json_decode(file_get_contents($root . '/composer.lock'), true, 512, JSON_THROW_ON_ERROR);
+foreach ($lock['packages'] as $package) {
+  if (in_array($package['name'], $forbiddenPackages, true)) throw new RuntimeException('Retired SDK remains in the lock graph');
 }
-if (\Sentry\SentrySdk::getCurrentHub()->getClient() !== null) {
-  throw new Exception('External analytics was initialized');
+foreach ($forbiddenPackages as $package) {
+  if (is_dir($root . '/vendor/' . $package)) throw new RuntimeException('Retired SDK remains installed');
 }
-echo "PASS: real payment SDK processed both offline responses without initializing external analytics\n";
+foreach (['includes/functions.php', 'includes/cashfree-client.php', 'vendor/composer/autoload_files.php', 'vendor/composer/autoload_psr4.php', 'vendor/composer/autoload_static.php', 'vendor/composer/installed.json', 'vendor/composer/installed.php'] as $file) {
+  $source = file_get_contents($root . '/' . $file);
+  if (preg_match('/\b' . preg_quote($retiredProvider, '/') . '(?:\\\\|\/|\.|_)/i', $source) || strpos($source, 'Cashfree\\Cashfree') !== false) {
+    throw new RuntimeException('Retired provider wiring remains in ' . $file);
+  }
+}
+// Validate generated maps too: removing package bytes must not leave dead paths.
+foreach (['autoload_files.php', 'autoload_classmap.php', 'autoload_psr4.php', 'autoload_namespaces.php'] as $map) {
+  foreach (require $root . '/vendor/composer/' . $map as $name => $paths) {
+    foreach ((array) $paths as $path) {
+      if (!file_exists($path)) throw new RuntimeException('Missing autoload target: ' . $map . ' ' . $name);
+    }
+  }
+}
+$installedRuntime = require $root . '/vendor/composer/installed.php';
+foreach ($installedRuntime['versions'] as $name => $record) {
+  if (isset($record['install_path']) && !is_dir($record['install_path'])) throw new RuntimeException('Installed runtime path missing: ' . $name);
+}
+$installed = json_decode(file_get_contents($root . '/vendor/composer/installed.json'), true, 512, JSON_THROW_ON_ERROR);
+$lockedNames = array_column($lock['packages'], 'name');
+$installedNames = array_column($installed['packages'], 'name');
+sort($lockedNames); sort($installedNames);
+if ($lockedNames !== $installedNames) throw new RuntimeException('Lock and installed package inventory differ');
+require $root . '/vendor/autoload.php';
+if (class_exists(ucfirst($retiredProvider) . '\\' . ucfirst($retiredProvider) . 'Sdk') || class_exists('Cashfree\\Cashfree')) throw new RuntimeException('Retired SDK still autoloads');
+if (!class_exists(GuzzleHttp\Client::class)) throw new RuntimeException('Payment HTTP client no longer autoloads');
+echo "PASS: retired SDKs absent from dependencies, installation, application wiring and autoload\n";

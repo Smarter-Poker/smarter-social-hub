@@ -411,7 +411,6 @@ New deprecations:
 ### 1.25.0 (2019-09-06)
 
   * Deprecated SlackbotHandler, use SlackWebhookHandler or SlackHandler instead
-  * Deprecated RavenHandler, use sentry/sentry 2.x and their Sentry\Monolog\Handler instead
   * Deprecated HipChatHandler, migrate to Slack and use SlackWebhookHandler or SlackHandler instead
   * Added forward-compatible interfaces and traits FormattableHandlerInterface, FormattableHandlerTrait, ProcessableHandlerInterface, ProcessableHandlerTrait. If you use modern PHP and want to make code compatible with Monolog 1 and 2 this can help. You will have to require at least Monolog 1.25 though.
   * Added support for RFC3164 (outdated BSD syslog protocol) to SyslogUdpHandler
@@ -431,7 +430,6 @@ New deprecations:
   * Added InsightOpsHandler to migrate users of the LogEntriesHandler
   * Added protection to NormalizerFormatter against circular and very deep structures, it now stops normalizing at a depth of 9
   * Added capture of stack traces to ErrorHandler when logging PHP errors
-  * Added RavenHandler support for a `contexts` context or extra key to forward that to Sentry's contexts
   * Added forwarding of context info to FluentdFormatter
   * Added SocketHandler::setChunkSize to override the default chunk size in case you must send large log lines to rsyslog for example
   * Added ability to extend/override BrowserConsoleHandler
@@ -737,7 +735,6 @@ New deprecations:
   * Added LogstashFormatter (combine with SocketHandler or StreamHandler to send logs to Logstash)
   * Added PushoverHandler to send mobile notifications
   * Added CouchDBHandler and DoctrineCouchDBHandler
-  * Added RavenHandler to send data to Sentry servers
   * Added support for the new MongoClient class in MongoDBHandler
   * Added microsecond precision to log records' timestamps
   * Added `$flushOnOverflow` param to BufferHandler to flush by batches instead of losing

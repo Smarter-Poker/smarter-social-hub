@@ -12,6 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Verify vendored payment contracts
+        run: composer test --no-interaction
+
       - name: Deploy to Vercel
         run: |
           npm install -g vercel

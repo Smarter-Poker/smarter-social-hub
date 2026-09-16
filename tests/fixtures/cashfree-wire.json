@@ -1,0 +1,144 @@
+[
+    {
+        "mode": "sandbox",
+        "method": "POST",
+        "uri": "https://sandbox.cashfree.com/pg/orders",
+        "headers": {
+            "Content-Length": [
+                "307"
+            ],
+            "User-Agent": [
+                "GuzzleHttp/7"
+            ],
+            "Host": [
+                "sandbox.cashfree.com"
+            ],
+            "Accept": [
+                "application/json"
+            ],
+            "Content-Type": [
+                "application/json"
+            ],
+            "x-sdk-platform": [
+                "phpsdk-4.3.10"
+            ],
+            "x-client-secret": [
+                "fixture-secret"
+            ],
+            "x-client-id": [
+                "fixture-client"
+            ],
+            "x-api-version": [
+                "2023-08-01"
+            ]
+        },
+        "body": "{\"order_amount\":\"12.34\",\"order_currency\":\"USD\",\"customer_details\":{\"customer_id\":\"fixture-customer\",\"customer_email\":\"fixture@example.test\",\"customer_phone\":\"0000000000\",\"customer_name\":\"Example\"},\"order_meta\":{\"return_url\":\"https:\\/\\/example.test\\/webhooks\\/cashfree.php?orderId={order_id}&handle=wallet\"}}",
+        "session": "fixture-session",
+        "status": "SUCCESS"
+    },
+    {
+        "mode": "sandbox",
+        "method": "GET",
+        "uri": "https://sandbox.cashfree.com/pg/orders/order%20%2F%3F%2B%25/payments",
+        "headers": {
+            "User-Agent": [
+                "GuzzleHttp/7"
+            ],
+            "Host": [
+                "sandbox.cashfree.com"
+            ],
+            "Accept": [
+                "application/json"
+            ],
+            "Content-Type": [
+                "application/json"
+            ],
+            "x-sdk-platform": [
+                "phpsdk-4.3.10"
+            ],
+            "x-client-secret": [
+                "fixture-secret"
+            ],
+            "x-client-id": [
+                "fixture-client"
+            ],
+            "x-api-version": [
+                "2023-08-01"
+            ]
+        },
+        "body": "",
+        "session": "fixture-session",
+        "status": "SUCCESS"
+    },
+    {
+        "mode": "production",
+        "method": "POST",
+        "uri": "https://api.cashfree.com/pg/orders",
+        "headers": {
+            "Content-Length": [
+                "307"
+            ],
+            "User-Agent": [
+                "GuzzleHttp/7"
+            ],
+            "Host": [
+                "api.cashfree.com"
+            ],
+            "Accept": [
+                "application/json"
+            ],
+            "Content-Type": [
+                "application/json"
+            ],
+            "x-sdk-platform": [
+                "phpsdk-4.3.10"
+            ],
+            "x-client-secret": [
+                "fixture-secret"
+            ],
+            "x-client-id": [
+                "fixture-client"
+            ],
+            "x-api-version": [
+                "2023-08-01"
+            ]
+        },
+        "body": "{\"order_amount\":\"12.34\",\"order_currency\":\"USD\",\"customer_details\":{\"customer_id\":\"fixture-customer\",\"customer_email\":\"fixture@example.test\",\"customer_phone\":\"0000000000\",\"customer_name\":\"Example\"},\"order_meta\":{\"return_url\":\"https:\\/\\/example.test\\/webhooks\\/cashfree.php?orderId={order_id}&handle=wallet\"}}",
+        "session": "fixture-session",
+        "status": "SUCCESS"
+    },
+    {
+        "mode": "production",
+        "method": "GET",
+        "uri": "https://api.cashfree.com/pg/orders/order%20%2F%3F%2B%25/payments",
+        "headers": {
+            "User-Agent": [
+                "GuzzleHttp/7"
+            ],
+            "Host": [
+                "api.cashfree.com"
+            ],
+            "Accept": [
+                "application/json"
+            ],
+            "Content-Type": [
+                "application/json"
+            ],
+            "x-sdk-platform": [
+                "phpsdk-4.3.10"
+            ],
+            "x-client-secret": [
+                "fixture-secret"
+            ],
+            "x-client-id": [
+                "fixture-client"
+            ],
+            "x-api-version": [
+                "2023-08-01"
+            ]
+        },
+        "body": "",
+        "session": "fixture-session",
+        "status": "SUCCESS"
+    }
+]
