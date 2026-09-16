@@ -76,6 +76,38 @@ foreach (['create', 'check'] as $operation) {
   }
 }
 $client = offlineClient($system, [new Response(200, [], '{}')], $history);
-try { $client->createOrder([]); throw new \LogicException('Expected missing-session failure'); }
+try { $client->createOrder(json_decode($wire[0]['body'], true)); throw new \LogicException('Expected missing-session failure'); }
 catch (\UnexpectedValueException $error) { check($error->getMessage() === 'Cashfree returned no payment session', 'Missing session must fail'); }
+// Original SDK setters rejected these inputs before creating an HTTP request.
+$invalid = json_decode(file_get_contents(__DIR__ . '/fixtures/cashfree-validation.json'), true, 512, JSON_THROW_ON_ERROR);
+foreach ($invalid as $case) {
+  $order = json_decode($wire[0]['body'], true);
+  $field = $case['field'];
+  if (strpos($field, 'customer_') === 0) $order['customer_details'][$field] = $case['value'];
+  elseif ($field === 'return_url') $order['order_meta'][$field] = $case['value'];
+  else $order[$field] = $case['value'];
+  $client = offlineClient($system, [new Response(200, [], '{"payment_session_id":"must-not-send"}')], $history);
+  $message = null;
+  try { $client->createOrder($order); } catch (\InvalidArgumentException $error) { $message = $error->getMessage(); }
+  check($message === $case['message'], 'Original input rejection changed: ' . $field);
+  check(count($history) === 0, 'Invalid order reached payment transport: ' . $field);
+  // Exercise the actual entry point for each externally supplied field.
+  if (in_array($field, ['customer_name', 'customer_email', 'customer_phone', 'order_currency'], true) || ($field === 'order_amount' && $case['value'] !== null)) {
+    $input = ['customer_name'=>'Example', 'customer_email'=>'fixture@example.test', 'customer_phone'=>'0000000000', 'order_amount'=>12.34, 'order_currency'=>'USD'];
+    $input[$field] = $case['value'];
+    $settings = $system; $settings['system_currency'] = $input['order_currency'];
+    $previousSystem = $system; $system = $settings;
+    $client = offlineClient($settings, [new Response(200, [], '{"payment_session_id":"must-not-send"}')], $history);
+    $message = null;
+    try { cashfree('wallet', $input['order_amount'], null, $input['customer_name'], $input['customer_email'], $input['customer_phone'], $client); }
+    catch (\Exception $error) { $message = $error->getMessage(); }
+    finally { $system = $previousSystem; }
+    check($message === $case['message'] && count($history) === 0, 'Invalid input escaped real payment helper: ' . $field);
+  }
+}
+foreach ([3, 100] as $length) {
+  $client = offlineClient($system, [new Response(200, [], '{"payment_session_id":"boundary-session"}')], $history);
+  check(cashfree('wallet', 1, null, str_repeat('é', $length), str_repeat('x', $length), '0000000000', $client) === 'boundary-session', 'Valid inclusive field bounds changed');
+  check(count($history) === 1, 'Valid boundary input must reach the provider once');
+}
 echo "PASS: original wire contracts, both payment entry points, all seven handles, first-payment decisions and failure boundaries\n";

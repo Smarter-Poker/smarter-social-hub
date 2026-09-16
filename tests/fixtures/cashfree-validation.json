@@ -1,0 +1,82 @@
+[
+    {
+        "field": "order_amount",
+        "value": null,
+        "message": "non-nullable order_amount cannot be null"
+    },
+    {
+        "field": "order_amount",
+        "value": 0.5,
+        "message": "invalid value for $order_amount when calling CreateOrderRequest., must be bigger than or equal to 1."
+    },
+    {
+        "field": "order_currency",
+        "value": null,
+        "message": "non-nullable order_currency cannot be null"
+    },
+    {
+        "field": "customer_id",
+        "value": null,
+        "message": "non-nullable customer_id cannot be null"
+    },
+    {
+        "field": "customer_id",
+        "value": "ab",
+        "message": "invalid length for $customer_id when calling CustomerDetails., must be bigger than or equal to 3."
+    },
+    {
+        "field": "customer_id",
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "message": "invalid length for $customer_id when calling CustomerDetails., must be smaller than or equal to 50."
+    },
+    {
+        "field": "customer_name",
+        "value": null,
+        "message": "non-nullable customer_name cannot be null"
+    },
+    {
+        "field": "customer_name",
+        "value": "ab",
+        "message": "invalid length for $customer_name when calling CustomerDetails., must be bigger than or equal to 3."
+    },
+    {
+        "field": "customer_name",
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "message": "invalid length for $customer_name when calling CustomerDetails., must be smaller than or equal to 100."
+    },
+    {
+        "field": "customer_phone",
+        "value": null,
+        "message": "non-nullable customer_phone cannot be null"
+    },
+    {
+        "field": "customer_phone",
+        "value": "123456789",
+        "message": "invalid length for $customer_phone when calling CustomerDetails., must be bigger than or equal to 10."
+    },
+    {
+        "field": "customer_phone",
+        "value": "12345678901",
+        "message": "invalid length for $customer_phone when calling CustomerDetails., must be smaller than or equal to 10."
+    },
+    {
+        "field": "customer_email",
+        "value": null,
+        "message": "non-nullable customer_email cannot be null"
+    },
+    {
+        "field": "customer_email",
+        "value": "ab",
+        "message": "invalid length for $customer_email when calling CustomerDetails., must be bigger than or equal to 3."
+    },
+    {
+        "field": "customer_email",
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "message": "invalid length for $customer_email when calling CustomerDetails., must be smaller than or equal to 100."
+    },
+    {
+        "field": "return_url",
+        "value": null,
+        "message": "non-nullable return_url cannot be null"
+    }
+]

@@ -25,6 +25,7 @@ final class CashfreePaymentClient
 
   public function createOrder(array $order): string
   {
+    $this->validateOrder($order);
     $result = $this->request('POST', '/orders', \GuzzleHttp\Utils::jsonEncode($order));
     if (!is_array($result) || !isset($result['payment_session_id']) || !is_string($result['payment_session_id']) || $result['payment_session_id'] === '') {
       throw new \UnexpectedValueException('Cashfree returned no payment session');
@@ -43,6 +44,38 @@ final class CashfreePaymentClient
     }
     // Preserve the existing first-payment-only decision used by the webhook.
     return isset($payments[0]['payment_status']) && $payments[0]['payment_status'] === 'SUCCESS';
+  }
+
+  private function validateOrder(array $order): void
+  {
+    // Preserve the validation previously performed by the model setters before HTTP.
+    $amount = $order['order_amount'] ?? null;
+    self::requireValue($amount, 'order_amount');
+    if ($amount < 1) {
+      throw new \InvalidArgumentException('invalid value for $order_amount when calling CreateOrderRequest., must be bigger than or equal to 1.');
+    }
+    self::requireValue($order['order_currency'] ?? null, 'order_currency');
+    $customer = $order['customer_details'] ?? null;
+    self::requireValue($customer, 'customer_details');
+    self::requireLength($customer['customer_id'] ?? null, 'customer_id', 3, 50);
+    self::requireLength($customer['customer_name'] ?? null, 'customer_name', 3, 100);
+    self::requireLength($customer['customer_phone'] ?? null, 'customer_phone', 10, 10);
+    self::requireLength($customer['customer_email'] ?? null, 'customer_email', 3, 100);
+    self::requireValue($order['order_meta'] ?? null, 'order_meta');
+    self::requireValue($order['order_meta']['return_url'] ?? null, 'return_url');
+  }
+
+  private static function requireValue($value, string $field): void
+  {
+    if ($value === null) throw new \InvalidArgumentException('non-nullable ' . $field . ' cannot be null');
+  }
+
+  private static function requireLength($value, string $field, int $min, int $max): void
+  {
+    self::requireValue($value, $field);
+    $length = mb_strlen($value);
+    if ($length > $max) throw new \InvalidArgumentException('invalid length for $' . $field . ' when calling CustomerDetails., must be smaller than or equal to ' . $max . '.');
+    if ($length < $min) throw new \InvalidArgumentException('invalid length for $' . $field . ' when calling CustomerDetails., must be bigger than or equal to ' . $min . '.');
   }
 
   private function request(string $method, string $path, string $body = '')
