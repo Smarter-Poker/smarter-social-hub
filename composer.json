@@ -25,11 +25,15 @@
   "agence104/livekit-server-sdk": "^1.3",
   "workerman/phpsocket.io": "^2.2",
   "shift4/shift4-php": "^4.0",
-  "cashfree/cashfree-pg": "4.3.10"
+  "guzzlehttp/guzzle": "^7.3"
  },
  "config": {
   "allow-plugins": {
    "php-http/discovery": true
   }
+ },
+ "scripts": {
+  "test:payments": "php tests/payment-telemetry.php && php tests/payment-sdk-telemetry.php",
+  "test": "@test:payments"
  }
 }

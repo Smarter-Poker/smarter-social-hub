@@ -6081,7 +6081,7 @@ function razorpay_check($payment_id, $amount)
  * @param string $billing_phone
  * @return string
  */
-function cashfree($handle, $price, $id, $billing_name, $billing_email, $billing_phone)
+function cashfree($handle, $price, $id, $billing_name, $billing_email, $billing_phone, ?CashfreePaymentClient $paymentClient = null)
 {
   global $system;
   /* prepare */
@@ -6122,32 +6122,21 @@ function cashfree($handle, $price, $id, $billing_name, $billing_email, $billing_
       _error(400);
       break;
   }
-  /* Cashfree */
-  $x_api_version = "2023-08-01";
-  Cashfree\Cashfree::$XClientId = $system['cashfree_client_id'];
-  Cashfree\Cashfree::$XClientSecret = $system['cashfree_client_secret'];
-  if ($system['cashfree_mode'] == 'sandbox') {
-    Cashfree\Cashfree::$XEnvironment = Cashfree\Cashfree::$SANDBOX;
-  } else {
-    Cashfree\Cashfree::$XEnvironment = Cashfree\Cashfree::$PRODUCTION;
-  }
-  $cashfree = new Cashfree\Cashfree();
-  $create_orders_request = new Cashfree\Model\CreateOrderRequest();
-  $create_orders_request->setOrderAmount($total);
-  $create_orders_request->setOrderCurrency($system['system_currency']);
-  $customer_details = new Cashfree\Model\CustomerDetails();
-  $customer_details->setCustomerId(uniqid());
-  $customer_details->setCustomerName($billing_name);
-  $customer_details->setCustomerPhone($billing_phone);
-  $customer_details->setCustomerEmail($billing_email);
-  $create_orders_request->setCustomerDetails($customer_details);
-  $order_meta = new Cashfree\Model\OrderMeta();
-  $order_meta->setReturnUrl($return_url);
-  $create_orders_request->setOrderMeta($order_meta);
+  require_once __DIR__ . '/cashfree-client.php';
+  $client = $paymentClient ?? new CashfreePaymentClient($system);
+  $order = [
+    'order_amount' => $total,
+    'order_currency' => $system['system_currency'],
+    'customer_details' => [
+      'customer_id' => uniqid(),
+      'customer_email' => $billing_email,
+      'customer_phone' => $billing_phone,
+      'customer_name' => $billing_name,
+    ],
+    'order_meta' => ['return_url' => $return_url],
+  ];
   try {
-    $result = $cashfree->PGCreateOrder($x_api_version, $create_orders_request);
-    /* return payment_session_id */
-    return $result[0]->getPaymentSessionId();
+    return $client->createOrder($order);
   } catch (Exception $e) {
     throw new Exception($e->getMessage());
   }
@@ -6160,24 +6149,13 @@ function cashfree($handle, $price, $id, $billing_name, $billing_email, $billing_
  * @param string $orderId
  * @return boolean
  */
-function cashfree_check($orderId)
+function cashfree_check($orderId, ?CashfreePaymentClient $paymentClient = null)
 {
   global $system;
-  $x_api_version = "2023-08-01";
-  Cashfree\Cashfree::$XClientId = $system['cashfree_client_id'];
-  Cashfree\Cashfree::$XClientSecret = $system['cashfree_client_secret'];
-  if ($system['cashfree_mode'] == 'sandbox') {
-    Cashfree\Cashfree::$XEnvironment = Cashfree\Cashfree::$SANDBOX;
-  } else {
-    Cashfree\Cashfree::$XEnvironment = Cashfree\Cashfree::$PRODUCTION;
-  }
-  $cashfree = new Cashfree\Cashfree();
+  require_once __DIR__ . '/cashfree-client.php';
+  $client = $paymentClient ?? new CashfreePaymentClient($system);
   try {
-    $result = $cashfree->PGOrderFetchPayments($x_api_version, $orderId, null, null, null);
-    if ($result && isset($result[0][0]) && $result[0][0] && $result[0][0]->getPaymentStatus() == "SUCCESS") {
-      return true;
-    }
-    return false;
+    return $client->firstPaymentSucceeded($orderId);
   } catch (Exception $e) {
     throw new Exception($e->getMessage());
   }
