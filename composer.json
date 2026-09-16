@@ -31,5 +31,8 @@
   "allow-plugins": {
    "php-http/discovery": true
   }
+ },
+ "scripts": {
+  "test:payment-telemetry": "php tests/payment-telemetry.php && php tests/payment-sdk-telemetry.php"
  }
 }

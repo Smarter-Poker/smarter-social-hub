@@ -6124,6 +6124,8 @@ function cashfree($handle, $price, $id, $billing_name, $billing_email, $billing_
   }
   /* Cashfree */
   $x_api_version = "2023-08-01";
+  // Disable the payment SDK's optional external error analytics before any call.
+  Cashfree\Cashfree::$XEnableErrorAnalytics = false;
   Cashfree\Cashfree::$XClientId = $system['cashfree_client_id'];
   Cashfree\Cashfree::$XClientSecret = $system['cashfree_client_secret'];
   if ($system['cashfree_mode'] == 'sandbox') {
@@ -6164,6 +6166,8 @@ function cashfree_check($orderId)
 {
   global $system;
   $x_api_version = "2023-08-01";
+  // Disable the payment SDK's optional external error analytics before any call.
+  Cashfree\Cashfree::$XEnableErrorAnalytics = false;
   Cashfree\Cashfree::$XClientId = $system['cashfree_client_id'];
   Cashfree\Cashfree::$XClientSecret = $system['cashfree_client_secret'];
   if ($system['cashfree_mode'] == 'sandbox') {
